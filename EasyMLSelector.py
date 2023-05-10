@@ -106,16 +106,19 @@ class EasyMLSelector():
         if self.verbose:
             print('testing best model . . .')
             print(self.results_book[0]['name'])
+        
         preds = model.predict(self.X_test)
 
         if self.type_filter == "classifier":
-            print(classification_report(preds, self.y_test))
+            res = classification_report(self.y_test, preds, zero_division=True)
         elif self.type_filter == "regressor":
-            print("R2 score:", r2_score(self.y_test, preds))
+            res = {"R2score": r2_score(self.y_test, preds)}
         elif self.type_filter == "cluster":
-            print("Completeness:", completeness_score(self.y_test, preds))
+            res = {"Completeness": completeness_score(self.y_test, preds)}
         else:
-            print("sklearn score:", model.score(self.X_test, self.y_test))
+            res = {"sklearn score": model.score(self.X_test, self.y_test)}
+        print(res)
+        return res
 
 
     def __getitem__(self, item):
